@@ -1,0 +1,75 @@
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+#game-table {
+    display: grid;
+    grid-template-columns: 200px 1fr 200px;
+    grid-template-rows: 150px 1fr 180px;
+    grid-template-areas:
+        ".         top       ."
+        "left      center    right"
+        ".         bottom    deck";
+    height: 100vh;
+    background: #1a4716;
+    padding: 10px;
+}
+
+.top-side {
+    grid-area: top;
+}
+
+.left-side {
+    grid-area: left;
+    display: flex;
+    justify-content: center;
+}
+
+.center-play-zone {
+    grid-area: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.right-side {
+    grid-area: right;
+    display: flex;
+    justify-content: center;
+}
+
+.player-side {
+    grid-area: bottom;
+}
+
+.corner-deck {
+    grid-area: deck;
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+}
+
+.hand-container {
+    border: 2px dashed rgba(255, 255, 255, 0.15);
+    border-radius: 12px;
+    background: rgba(0, 0, 0, 0.05);
+    min-width: 250px;
+    min-height: 110px;
+}
+
+.hand-container.vertical {
+    min-width: 110px;
+    min-height: 250px;
+    transform: rotate(0deg);
+}
+
+#game-notifications {
+    margin-top: 15px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: rgba(255, 255, 255, 0.7);
+}

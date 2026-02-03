@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Very Unique Card Game</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div id="game-table">
+        <div class="side top-side">
+            <div id="opponent-top" class="hand-container"></div>
+        </div>
+
+        <div class="side left-side">
+            <div id="opponent-left" class="hand-container vertical"></div>
+        </div>
+
+        <div class="center-play-zone">
+            <div id="discard-pile" class="pile"></div>
+            <div id="game-notifications">Your Turn</div>
+        </div>
+
+        <div class="side right-side">
+            <div id="opponent-right" class="hand-container vertical"></div>
+        </div>
+
+        <div class="side player-side">
+            <div id="player-hand" class="hand-container"></div>
+            <button id="uno-button">UNO</button>
+        </div>
+
+        <div class="corner-deck">
+            <div class="deck-stack" id="main-draw-deck">
+                <div class="card card-back"></div>
+                <div class="card card-back shadow-1"></div>
+                <p style="color: white;">DRAW</p>
+            </div>
+        </div>
+    </div>
+    <script src="main.js" type="module"></script>
+</body>
+
+</html>
