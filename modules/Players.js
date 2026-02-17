@@ -8,10 +8,17 @@ class UnoGame {
   }
 
   skipNextPlayer() {
-    this.currentPlayerIndex = this.getNextPlayerIndex(2);
+    this.currentPlayerIndex = this.getNextPlayer(2);
   }
 
-  getNextPlayerIndex(steps = 1) {
-    return (this.currentPlayerIndex + (steps * this.direction) + this.players.length) % this.players.length;
+  getNextPlayer(steps = 1) {
+    // ((0+(1*1)+4)%4)-4  = 2
+    // moves clockwise 2 steps.
+    // ((0+(1*-1)+4)%4)-4 = -2
+    // moves counterclockwise 2 steps
+
+    return ((this.currentPlayerIndex + (steps * this.direction) + this.players.length) % this.players.length)-4;
   }
 }
+
+// export {UnoGame};

@@ -1,6 +1,7 @@
 /**
  * Uno Game Card Logic
- */
+*/
+
 
 class UnoCard {
   constructor(color, value) {
@@ -8,11 +9,12 @@ class UnoCard {
     this.value = value; 
   }
 
-  isPlayable(topCard) {
+  // Color Black = Wild
+  isPlayable(PlayedCard) {
     return (
-      this.color === 'Wild' || 
-      this.color === topCard.color || 
-      this.value === topCard.value
+      this.color === black || 
+      this.color === PlayedCard.color || 
+      this.value === PlayedCard.value
     );
   }
 
@@ -25,6 +27,7 @@ class UnoCard {
   // Standard cards method
   action(game) {
     // Standard number cards will just end the turn logic
+    // after being placed on the discard pile
   }
 }
 
@@ -59,11 +62,11 @@ class SpecialCard extends UnoCard {
 
 class WildCard extends SpecialCard {
   constructor(value) {
-    super('Wild', value);
+    super(black, value);
     this.chosenColor = null;
   }
 
-  isPlayable(topCard) {
+  isPlayable(PlayedCard) {
     return true;
   }
 
@@ -82,7 +85,7 @@ class CustomCard extends SpecialCard {
     this.effectCallback = effectCallback;
   }
 
-  isPlayable(topCard) {
+  isPlayable(PlayedCard) {
     return true; 
   }
 
