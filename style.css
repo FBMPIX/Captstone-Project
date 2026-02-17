@@ -1,6 +1,6 @@
 :root {
-    --card-width: 80px;
-    --card-height: 120px;
+    --card-width: 12vw;
+    --card-height: 25vh;
     --table-green: #1a4716;
     --border-color: rgba(255, 255, 255, 0.2);
 }
@@ -112,11 +112,14 @@ body {
 
 .corner-deck {
     grid-area: deck;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    text-align: center;
+    justify-self: right;
 }
-
+.card {
+    border: dotted var(--border-color);
+    height: var(--card-height);
+    width: var(--card-width);
+}
 .card-placeholder {
     width: var(--card-width);
     height: var(--card-height);
