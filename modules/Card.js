@@ -1,24 +1,22 @@
 /**
  * Uno Game Card Logic
-*/
-
+ */
 
 class UnoCard {
   constructor(color, value) {
-    this.color = color; 
-    this.value = value; 
+    this.color = color;
+    this.value = value;
   }
 
   // Color Black = Wild
   isPlayable(PlayedCard) {
     return (
-      this.color === black || 
-      this.color === PlayedCard.color || 
+      this.color === black ||
+      this.color === PlayedCard.color ||
       this.value === PlayedCard.value
     );
   }
 
-  
   play(game) {
     console.log(`Played: ${this.color} ${this.value}`);
     this.action(game);
@@ -31,13 +29,11 @@ class UnoCard {
   }
 }
 
-
 class UniqueCard extends UnoCard {
   constructor(color, value) {
     super(color, value);
   }
 }
-
 
 class SpecialCard extends UnoCard {
   constructor(color, value) {
@@ -46,13 +42,13 @@ class SpecialCard extends UnoCard {
 
   action(game) {
     switch (this.value) {
-      case 'Skip':
+      case "Skip":
         game.skipNextPlayer();
         break;
-      case 'Reverse':
+      case "Reverse":
         game.reverseTurnOrder();
         break;
-      case '+2':
+      case "+2":
         game.playerDraws(game.getNextPlayer(), 2);
         game.skipNextPlayer();
         break;
@@ -71,7 +67,7 @@ class WildCard extends SpecialCard {
   }
 
   action(game) {
-    if (this.value === '+4') {
+    if (this.value === "+4") {
       game.playerDraws(game.getNextPlayer(), 4);
       game.skipNextPlayer();
     }
@@ -80,13 +76,13 @@ class WildCard extends SpecialCard {
 
 class CustomCard extends SpecialCard {
   constructor(name, description, effectCallback) {
-    super('Custom', name);
+    super("Custom", name);
     this.description = description;
     this.effectCallback = effectCallback;
   }
 
   isPlayable(PlayedCard) {
-    return true; 
+    return true;
   }
 
   action(game) {
