@@ -1,64 +1,53 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Very Unique Card Game</title>
-    <link rel="stylesheet" href="style.css">
-</head>
+    <link rel="stylesheet" href="style.css" />
+  </head>
 
-<body>
+  <body>
     <div id="game-table">
-        <div class="side top-side">
-            <div id="opponent-top" class="hand-container"></div>
+      <div class="side top-side">
+        <div id="opponent-top" class="hand-container"></div>
+      </div>
+
+      <div class="side left-side">
+        <div id="opponent-left" class="hand-container vertical"></div>
+      </div>
+
+      <div class="center-play-zone">
+        <div id="game-notifications">Your Turn</div>
+        <div id="discard-pile" class="pile"></div>
+      </div>
+
+      <div class="side right-side">
+        <div id="opponent-right" class="hand-container vertical"></div>
+      </div>
+
+      <div class="side player-side">
+        <div id="player-hand" class="hand-container"></div>
+        <button id="uno-button">UNO</button>
+      </div>
+
+      <div id="color-picker" style="display: none">
+        <p>Choose a color:</p>
+        <div id="color-choices">
+          <button class="color-btn" data-color="red"></button>
+          <button class="color-btn" data-color="yellow"></button>
+          <button class="color-btn" data-color="green"></button>
+          <button class="color-btn" data-color="blue"></button>
         </div>
+      </div>
 
-        <div class="side left-side">
-            <div id="opponent-left" class="hand-container vertical"></div>
+      <div class="corner-deck">
+        <div class="deck-stack" id="main-draw-deck">
+          <div class="card card-back"></div>
+          <span class="deck-label">DRAW CARD</span>
         </div>
-
-        <div class="center-play-zone">
-            <div id="game-notifications">Your Turn</div>
-            <div id="discard-pile" class="pile"> <img class="card" src="assets/Draw_02.jpg" alt="">
-            </div>
-        </div>
-
-        <div class="side right-side">
-            <div id="opponent-right" class="hand-container vertical"></div>
-        </div>
-
-        <div class="side player-side">
-            <div id="player-hand" class="hand-container">
-                <img class="card" src="assets/Draw_02.jpg" alt="">
-                <img class="card" src="assets/Draw_02.jpg" alt="">
-                <img class="card" src="assets/Draw_02.jpg" alt="">
-                <img class="card" src="assets/Draw_02.jpg" alt="">
-                <img class="card" src="assets/Draw_02.jpg" alt="">
-                <img class="card" src="assets/Draw_02.jpg" alt="">
-                <img class="card" src="assets/Draw_02.jpg" alt="">
-                <img class="card" src="assets/Draw_02.jpg" alt="">
-                <img class="card" src="assets/Draw_02.jpg" alt="">
-                <img class="card" src="assets/Draw_02.jpg" alt="">
-                <img class="card" src="assets/Draw_02.jpg" alt="">
-                <img class="card" src="assets/Draw_02.jpg" alt="">
-                <img class="card" src="assets/Draw_02.jpg" alt="">
-                <img class="card" src="assets/Draw_02.jpg" alt="">
-                <img class="card" src="assets/Draw_02.jpg" alt="">
-            </div>
-            <button id="uno-button">UNO</button> 
-
-        </div>
-
-        <div class="corner-deck">
-            <div class="deck-stack" id="main-draw-deck">
-                <div class="card card-back"> <img class="card" src="assets/Draw_02.jpg" alt="">
-                </div>
-
-            </div>
-        </div>
+      </div>
     </div>
     <script src="main.js" type="module"></script>
-</body>
-
+  </body>
 </html>

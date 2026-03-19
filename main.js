@@ -1,5 +1,5 @@
 // main.js
-import { Rules } from "./rules.js";
+import { Rules } from "./modules/rules.js";
 
 // Card colors and values
 const COLORS = ["red", "yellow", "green", "blue"];
