@@ -259,43 +259,12 @@ function createCardElement(card, isClickable = false, cardIndex = null) {
       case "wild-draw4":
         const maskId = `mask-${Math.random().toString(36).substring(2, 9)}`;
         svgContent = `
-                      <svg width="256" height="384" viewBox="0 0 256 384" xmlns="http://www.w3.org/2000/svg">
-                        <defs>
-                          <mask id="${maskId}">
-                            <rect x="0" y="0" width="256" height="384" fill="white" />
-                            <rect x="-50" y="140" width="400" height="100" fill="black" transform="rotate(-10, 128, 192)" />
-                            <text x="128" y="215" font-family="Impact, sans-serif" font-weight="900" font-size="80" fill="white" text-anchor="middle"> +4 </text>
-                          </mask>
-                        </defs>
-                        <rect x="8" y="8" width="240" height="368" fill="#1a1a1a" mask="url(#${maskId})" />
-                        <path d="M 8 60 L 8 8 L 60 8" fill="none" stroke="black" stroke-width="6" />
-                        <path d="M 196 376 L 248 376 L 248 324" fill="none" stroke="black" stroke-width="6" />
-                        <text x="30" y="35" font-family="monospace" font-weight="bold" font-size="18" fill="white">Special</text>
-                      </svg>`;
+          <svg width="256" height="384" viewBox="0 0 256 384" xmlns="http://www.w3.org/2000/svg"><rect x="9" y="110" width="236" height="170" fill="#fff" rx="12"/><defs><mask id="a"><path fill="#fff" d="M0 0h256v384H0z"/><path d="m-56.325 171.7 393.923-69.46 17.364 98.48-393.923 69.46z"/><text x="128" y="215" font-family="Impact, sans-serif" font-weight="900" font-size="80" fill="#fff" text-anchor="middle">+4 </text></mask></defs><path fill="#1a1a1a" mask="url(#a)" d="M8 8h240v368H8z"/><path d="M8 60V8h52m136 368h52v-52" fill="none" stroke="#000" stroke-width="6"/><text x="30" y="35" font-family="monospace" font-weight="bold" font-size="18" fill="#fff">Special</text></svg>
+          `;
         break;
       case "wild":
         svgContent = `
-                  <svg width="256" height="384" viewBox="0 0 256 384" xmlns="http://www.w3.org/2000/svg">
-                    <defs>
-                      <mask id="void-mask">
-                        <rect x="0" y="0" width="256" height="384" fill="white" />
-                        <rect x="-50" y="140" width="400" height="100" fill="black" transform="rotate(-10, 128, 192)" />
-                        </mask>
-                    </defs>
-
-                    <rect x="8" y="8" width="240" height="368" rx="0" fill="currentColor" mask="url(#void-mask)" />
-                    <g transform="rotate(45, 128, 192)">
-                      <path d="M 68 132 L 128 132 L 128 192 L 68 192 Z" fill="#2E5BFF" />
-                      <path d="M 128 132 L 188 132 L 188 192 L 128 192 Z" fill="#D90368" />
-                      <path d="M 68 192 L 128 192 L 128 252 L 68 252 Z" fill="#FF5733" />
-                      <path d="M 128 192 L 188 192 L 188 252 L 128 252 Z" fill="#A2FF00" />
-                      <rect x="68" y="132" width="120" height="120" fill="none" stroke="white" stroke-width="2" rx="2" />
-                    </g>
-
-                    <path d="M 8 60 L 8 8 L 60 8" fill="none" stroke="black" stroke-width="6" />
-                    <path d="M 196 376 L 248 376 L 248 324" fill="none" stroke="black" stroke-width="6" />
-                    <text x="30" y="35" font-family="monospace" font-weight="bold" font-size="18" fill="white">Special</text>
-                  </svg>`;
+          <svg width="256" height="384" viewBox="0 0 256 384" xmlns="http://www.w3.org/2000/svg"><rect x="9" y="110" width="236" height="170" fill="#fff" rx="12"/><defs><mask id="a"><path fill="#fff" d="M0 0h256v384H0z"/><path d="m-56.325 171.7 393.923-69.46 17.364 98.48-393.923 69.46z"/></mask></defs><rect x="8" y="8" width="240" height="368" rx="0" mask="url(#a)"/><g transform="rotate(45 128 192)"><path d="M68 132h60v60H68Z" fill="#2e5bff"/><path d="M128 132h60v60h-60Z" fill="#d90368"/><path d="M68 192h60v60H68Z" fill="#ff5733"/><path d="M128 192h60v60h-60Z" fill="#a2ff00"/><rect x="68" y="132" width="120" height="120" fill="none" stroke="#fff" stroke-width="2" rx="2"/></g><path d="M8 60V8h52m136 368h52v-52" fill="none" stroke="#000" stroke-width="6"/><text x="30" y="35" font-family="monospace" fill="#fff" font-weight="bold" font-size="18">Special</text></svg>`;
         break;
     }
   }

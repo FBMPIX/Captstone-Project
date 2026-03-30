@@ -1,6 +1,6 @@
 :root{
   --red:#e74c3c;--blue:#3498db;--green:#2ecc71;--yellow:#f1c40f;
-  --card-width:150px;--card-height:220px;
+  --card-width:7vw;--card-height:18vh;
   --table-green:#1a4716;--border:rgba(255,255,255,.2);
 }
 
@@ -22,13 +22,14 @@ body{overflow:hidden;font-family:"Segoe UI",sans-serif}
   transition:filter .5s;
 }
 
-.side,.center-play-zone,.corner-deck{display:flex;justify-content:center;align-items:center;grid-area: deck;}
+.side,.center-play-zone,.corner-deck{display:flex;justify-content:center;align-items:center;}
 
 .uno-btn-area {grid-area: uno;display: flex;justify-content: center;align-items: center;}
 .top-side{grid-area:top}
 .left-side{grid-area:left}
 .right-side{grid-area:right}
 .player-side{grid-area:bottom;flex-direction:column}
+.corner-deck {grid-area: deck;}
 .center-play-zone{grid-area:center;flex-direction:column;position:relative}
 
 /* Hand */
@@ -70,10 +71,7 @@ body{overflow:hidden;font-family:"Segoe UI",sans-serif}
 .card-blue{background:var(--blue);color:#fff}
 .card-green{background:var(--green);color:#fff}
 .card-yellow{background:var(--yellow)}
-.card-wild{
-  background:linear-gradient(135deg,var(--red),var(--yellow),var(--green),var(--blue));
-  color:#fff;text-shadow:1px 1px 2px #000
-}
+
 
 .card-back{
   background:#c0392b;
