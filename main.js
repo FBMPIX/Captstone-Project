@@ -96,13 +96,17 @@ function dealCards() {
   discardPile.push(firstCard);
 }
 
-// Start the game - render everything
+// render everything
 function startGame() {
+  currentPlayer = "player";
+  gameDirection = 1;
+
   renderPlayerHand();
   renderOpponentHands();
   renderDiscardPile();
-  updateNotification();
   setupColorPicker();
+
+  nextTurn(0);
 
   console.log("Game started!");
   console.log("Your hand:", players.player);
@@ -124,9 +128,16 @@ function showColorPicker() {
 function pickColor(color) {
   const topCard = discardPile[discardPile.length - 1];
   topCard.color = color;
+
   document.getElementById("color-picker").style.display = "none";
   renderDiscardPile();
-  applyCardEffect(topCard);
+
+  // Check if it was a +4 or just a Wild
+  if (topCard.value === "wild-draw4") {
+    applyCardEffect(topCard);
+  } else {
+    nextTurn(1); // Just a regular Wild, move to next player
+  }
 }
 
 // Render player's hand at bottom
@@ -156,36 +167,173 @@ function renderOpponentHands() {
   });
 }
 
-// Render the top card of discard pile
 function renderDiscardPile() {
   const pile = document.getElementById("discard-pile");
+
   pile.innerHTML = "";
 
   if (discardPile.length > 0) {
     const topCard = discardPile[discardPile.length - 1];
     const cardElement = createCardElement(topCard, false);
+    const randomRotation = Math.random() * 10 - 5;
+    cardElement.style.setProperty("--rotation", `${randomRotation}deg`);
+
     pile.appendChild(cardElement);
   }
 }
 
-// Create a card element
 function createCardElement(card, isClickable = false, cardIndex = null) {
   const cardDiv = document.createElement("div");
   cardDiv.className = `card card-${card.color}`;
-  cardDiv.textContent = card.value.toUpperCase();
 
-  // Add click handler for player's cards
-  if (isClickable) {
-    cardDiv.addEventListener("click", () => playCard(cardIndex));
-    cardDiv.style.cursor = "pointer";
+  const colors = {
+    red: "#991240",
+    yellow: "#E1AD01",
+    green: "#008080",
+    blue: "#2E5BFF",
+    wild: "#333",
+  };
+  const cardColor = colors[card.color] || "#333";
+  let svgContent = "";
 
-    // Check if card is playable
-    if (isCardPlayable(card)) {
-      cardDiv.classList.add("playable");
+  // Determine which SVG design to use
+  // TODO: Fix Unique and wild cards
+  if (!isNaN(card.value)) {
+    // STANDARD NUMBER CARDS
+    svgContent = `
+        <svg viewBox="0 0 256 384" xmlns="http://www.w3.org/2000/svg">
+            <rect x="10" y="10" width="236" height="364" rx="12" fill="${cardColor}" stroke="currentColor" stroke-width="4" />
+            <rect x="4" y="4" width="248" height="376" rx="16" fill="none" stroke="black" stroke-width="2" />
+            <path d="M 100 10 L 246 10 L 246 180 Z" fill="currentColor" opacity=".3" />
+            <path d="M 10 200 L 10 374 L 156 374 Z" fill="currentColor" opacity=".3" />
+            <rect x="68" y="132" width="120" height="120" rx="10" fill="white" stroke="${cardColor}" stroke-width="3" transform="rotate(45, 128, 192)" />
+            <text x="128" y="230" font-family="Verdana" font-weight="900" font-size="100" fill="#333" text-anchor="middle">${card.value}</text>
+            <rect x="80" y="340" width="96" height="6" rx="3" fill="currentColor" />
+        </svg>`;
+  } else {
+    switch (card.value) {
+      case "draw2":
+        svgContent = `
+                  <svg viewBox="0 0 256 384" xmlns="http://www.w3.org/2000/svg">
+                      <rect x="10" y="10" width="236" height="364" rx="12" fill="${cardColor}" stroke="currentColor" stroke-width="4" />
+                      <rect x="4" y="4" width="248" height="376" rx="16" fill="none" stroke="black" stroke-width="2" />
+                      <path d="M 100 10 L 246 10 L 246 180 Z" fill="currentColor" opacity=".3" />
+                      <path d="M 10 200 L 10 374 L 156 374 Z" fill="currentColor" opacity=".3" />
+                      <text x="20" y="45" font-family="Verdana" font-weight="900" font-size="22" fill="currentColor"> +2 </text>
+                      <rect x="68" y="132" width="120" height="120" rx="10" fill="currentColor" stroke="black" stroke-width="2" transform="rotate(45, 128, 192)" />
+                      <text x="120" y="215" font-family="Verdana" font-weight="900" font-size="75" fill="white" text-anchor="middle"> +2 </text>
+                      <rect x="80" y="340" width="96" height="6" rx="3" fill="currentColor" />
+                  </svg>`;
+        break;
+      case "reverse":
+        svgContent = `
+                      <svg viewBox="0 0 256 384" xmlns="http://www.w3.org/2000/svg">
+                          <rect x="10" y="10" width="236" height="364" rx="12" fill="${cardColor}" stroke="white" stroke-width="4" />
+                          <rect x="4" y="4" width="248" height="376" rx="16" fill="none" stroke="black" stroke-width="2" />
+                          <path d="M 100 10 L 246 10 L 246 180 Z" fill="white" opacity=".2" />
+                          <path d="M 10 200 L 10 374 L 156 374 Z" fill="white" opacity=".2" />
+                          <rect x="68" y="132" width="120" height="120" rx="10" fill="currentColor" stroke="black" stroke-width="2" transform="rotate(45, 128, 192)" />
+                          <g fill="white" transform="translate(128, 192) scale(1.2) translate(-32, -32)">
+                              <path d="M 10 17 C 10 5, 45 5, 45 22 L 55 22 L 42 42 L 29 22 L 38 22 C 38 12, 20 12, 20 17 Z" />
+                              <path d="M 54 47 C 54 59, 19 59, 19 42 L 9 42 L 22 22 L 35 42 L 26 42 C 26 50, 44 50, 44 47 Z" />
+                          </g>
+                          <rect x="80" y="340" width="96" height="6" rx="3" fill="white" opacity="0.5" />
+                      </svg>`;
+        break;
+      case "skip":
+        svgContent = `
+                  <svg viewBox="0 0 256 384" xmlns="http://www.w3.org/2000/svg">
+                      <rect x="10" y="10" width="236" height="364" rx="12" fill="${cardColor}" stroke="currentColor" stroke-width="4" />
+                      <rect x="4" y="4" width="248" height="376" rx="16" fill="none" stroke="black" stroke-width="2" />
+                      <path d="M 100 10 L 246 10 L 246 180 Z" fill="currentColor" opacity=".3" />
+                      <path d="M 10 200 L 10 374 L 156 374 Z" fill="currentColor" opacity=".3" />
+                      <circle cx="32" cy="36" r="10" fill="none" stroke="currentColor" stroke-width="3" />
+                      <line x1="26" y1="42" x2="38" y2="30" stroke="currentColor" stroke-width="3" />
+                      <rect x="68" y="132" width="120" height="120" rx="10" fill="currentColor" stroke="black" stroke-width="2" transform="rotate(45, 128, 192)" />
+                      <g fill="white">
+                          <path d="M 128 152 A 40 40 0 1 0 128 232 A 40 40 0 1 0 128 152 Z M 128 162 A 30 30 0 0 1 150.2 171.8 L 105.8 216.2 A 30 30 0 0 1 128 162 Z M 128 222 A 30 30 0 0 1 105.8 212.2 L 150.2 167.8 A 30 30 0 0 1 128 222 Z" />
+                      </g>
+                      <rect x="80" y="340" width="96" height="6" rx="3" fill="currentColor" />
+                  </svg>`;
+        break;
+      case "wild-draw4":
+        const maskId = `mask-${Math.random().toString(36).substring(2, 9)}`;
+        svgContent = `
+                      <svg width="256" height="384" viewBox="0 0 256 384" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                          <mask id="${maskId}">
+                            <rect x="0" y="0" width="256" height="384" fill="white" />
+                            <rect x="-50" y="140" width="400" height="100" fill="black" transform="rotate(-10, 128, 192)" />
+                            <text x="128" y="215" font-family="Impact, sans-serif" font-weight="900" font-size="80" fill="white" text-anchor="middle"> +4 </text>
+                          </mask>
+                        </defs>
+                        <rect x="8" y="8" width="240" height="368" fill="#1a1a1a" mask="url(#${maskId})" />
+                        <path d="M 8 60 L 8 8 L 60 8" fill="none" stroke="black" stroke-width="6" />
+                        <path d="M 196 376 L 248 376 L 248 324" fill="none" stroke="black" stroke-width="6" />
+                        <text x="30" y="35" font-family="monospace" font-weight="bold" font-size="18" fill="white">Special</text>
+                      </svg>`;
+        break;
+      case "wild":
+        svgContent = `
+                  <svg width="256" height="384" viewBox="0 0 256 384" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                      <mask id="void-mask">
+                        <rect x="0" y="0" width="256" height="384" fill="white" />
+                        <rect x="-50" y="140" width="400" height="100" fill="black" transform="rotate(-10, 128, 192)" />
+                        </mask>
+                    </defs>
+
+                    <rect x="8" y="8" width="240" height="368" rx="0" fill="currentColor" mask="url(#void-mask)" />
+                    <g transform="rotate(45, 128, 192)">
+                      <path d="M 68 132 L 128 132 L 128 192 L 68 192 Z" fill="#2E5BFF" />
+                      <path d="M 128 132 L 188 132 L 188 192 L 128 192 Z" fill="#D90368" />
+                      <path d="M 68 192 L 128 192 L 128 252 L 68 252 Z" fill="#FF5733" />
+                      <path d="M 128 192 L 188 192 L 188 252 L 128 252 Z" fill="#A2FF00" />
+                      <rect x="68" y="132" width="120" height="120" fill="none" stroke="white" stroke-width="2" rx="2" />
+                    </g>
+
+                    <path d="M 8 60 L 8 8 L 60 8" fill="none" stroke="black" stroke-width="6" />
+                    <path d="M 196 376 L 248 376 L 248 324" fill="none" stroke="black" stroke-width="6" />
+                    <text x="30" y="35" font-family="monospace" font-weight="bold" font-size="18" fill="white">Special</text>
+                  </svg>`;
+        break;
     }
   }
 
+  cardDiv.innerHTML = svgContent;
+
+  if (isClickable) {
+    cardDiv.addEventListener("click", () => playCard(cardIndex));
+    if (isCardPlayable(card)) cardDiv.classList.add("playable");
+  }
+
   return cardDiv;
+}
+
+function getHexColor(colorName) {
+  const map = {
+    red: "#991240",
+    yellow: "#E1AD01",
+    green: "#008080",
+    blue: "#2E5BFF",
+    wild: "#333",
+  };
+  return map[colorName] || "#333";
+}
+
+function updateTurnVisuals(activeId) {
+  // Remove the active class from everyone
+  document.querySelectorAll(".hand-container").forEach((container) => {
+    container.classList.remove("active-turn");
+    container.parentElement.classList.remove("active-turn"); // For the side/player containers
+  });
+
+  // Add it to the current player's container
+  const activeContainer = document.getElementById(activeId);
+  if (activeContainer) {
+    activeContainer.classList.add("active-turn");
+    activeContainer.parentElement.classList.add("active-turn");
+  }
 }
 
 // Check if a card can be played
@@ -217,7 +365,7 @@ function playCard(cardIndex) {
   players.player.splice(cardIndex, 1);
   discardPile.push(card);
 
-  // Check win condition
+  // NOTE: Will be making "You Win" Screen in the future.
   if (players.player.length === 0) {
     updateNotification("You win!");
     return;
@@ -264,17 +412,32 @@ function forceDrawCards(playerName, count) {
 function applyCardEffect(card) {
   const effect = Rules.getCardEffect(card);
 
+  if (effect && effect.type === "reverse") {
+    gameDirection *= -1; // Flip logic
+
+    document.body.classList.toggle("direction-reversed", gameDirection === -1);
+
+    updateNotification("Reverse!");
+    nextTurn(1);
+    return;
+  }
+
+  if (effect && effect.type === "skip") {
+    updateNotification("Player Skipped!");
+    nextTurn(2); // nextTurn now handles the negative direction internally
+    return;
+  }
+
   if (effect && effect.type === "draw") {
     const nextPlayer = getNextPlayerName();
     forceDrawCards(nextPlayer, effect.amount);
-    const who = nextPlayer === "player" ? "You draw" : `${nextPlayer} draws`;
-    updateNotification(`${who} ${effect.amount} cards!`);
-    setTimeout(() => nextTurn(2), 1200);
-  } else {
-    nextTurn(1);
+    updateNotification(`${nextPlayer} draws ${effect.amount}!`);
+    nextTurn(2); // Skip the person who had to draw
+    return;
   }
-}
 
+  nextTurn(1);
+}
 // Move to next player, skipping `steps` positions
 function nextTurn(steps = 1) {
   const playerOrder = [
@@ -283,17 +446,51 @@ function nextTurn(steps = 1) {
     "opponentTop",
     "opponentRight",
   ];
+  const idMap = {
+    player: "player-hand",
+    opponentLeft: "opponent-left",
+    opponentTop: "opponent-top",
+    opponentRight: "opponent-right",
+  };
+
   let idx = playerOrder.indexOf(currentPlayer);
-  for (let i = 0; i < steps; i++) {
-    idx = (idx + gameDirection + 4) % 4;
-  }
+
+  // Calculate index respecting the reverse direction
+  idx = (idx + steps * gameDirection + 4) % 4;
   currentPlayer = playerOrder[idx];
+
+  // Toggle Focus Mode (Broken)
+  document.body.classList.toggle("opponent-active", currentPlayer !== "player");
+
+  // Clear previous active states
+  document.querySelectorAll(".hand-container").forEach((container) => {
+    container.classList.remove("active-turn", "thinking");
+  });
+
+  // Set new active state
+  const activeId = idMap[currentPlayer];
+  const activeContainer = document.getElementById(activeId);
+
+  if (activeContainer) {
+    activeContainer.classList.add("active-turn");
+
+    if (currentPlayer === "player") {
+      activeContainer.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    } else {
+      // Add a thinking class to trigger the AI glow animation from CSS
+      activeContainer.classList.add("thinking");
+    }
+  }
+
+  // Update the directional arrow rotation in the center
+  const centerZone = document.querySelector(".center-play-zone");
+  centerZone.classList.toggle("direction-clockwise", gameDirection === 1);
+  centerZone.classList.toggle("direction-counter", gameDirection === -1);
 
   updateNotification();
 
-  // If it's an opponent's turn, let them play after a delay
   if (currentPlayer !== "player") {
-    setTimeout(opponentPlay, 1000);
+    setTimeout(opponentPlay, 1200);
   }
 }
 

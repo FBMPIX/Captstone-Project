@@ -11,22 +11,13 @@ export const Rules = {
   isValidMove(selectedCard, topCard) {
     if (!selectedCard || !topCard) return false;
 
-    // match color
-    if (selectedCard.color === topCard.color) {
+    // Wild cards (Wild and Wild-Draw4) are always playable
+    if (selectedCard.color === "wild") {
       return true;
     }
 
-    // match value
-    if (selectedCard.value === topCard.value) {
-      return true;
-    }
-
-    // +4 can always be played
-    if (selectedCard.value === "+4") {
-      return true;
-    }
-
-    return false;
+    // Match color or value
+    return selectedCard.color === topCard.color || selectedCard.value === topCard.value;
   },
 
   // ==========================
