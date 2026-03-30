@@ -407,7 +407,6 @@ body.direction-reversed #game-table {
 
 /* Indicator for whose turn is coming next */
 .hand-container.active-turn::after {
-  content: '▼';
   position: absolute;
   top: -30px;
   left: 50%;
