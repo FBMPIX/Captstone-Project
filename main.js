@@ -115,7 +115,7 @@ function setupColorPicker() {
   });
 }
 
-// Show color picker modal (called when human plays a wild)
+// Show color picker modal (called when player plays a wild)
 function showColorPicker() {
   document.getElementById("color-picker").style.display = "flex";
 }
