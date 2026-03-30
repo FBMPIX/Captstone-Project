@@ -1,431 +1,199 @@
-:root {
-  --card-width: 150px;
-  --card-height: 220px;
-  --table-green: #1a4716;
-  --border-color: rgba(255, 255, 255, 0.2);
+:root{
+  --red:#e74c3c;--blue:#3498db;--green:#2ecc71;--yellow:#f1c40f;
+  --card-width:150px;--card-height:220px;
+  --table-green:#1a4716;--border:rgba(255,255,255,.2);
 }
 
-* {
-  padding: 0;
-  margin: 0;
-  box-sizing: border-box;
-}
+*{margin:0;padding:0;box-sizing:border-box}
+body{overflow:hidden;font-family:"Segoe UI",sans-serif}
 
-body {
-  overflow: hidden;
-  font-family: "Segoe UI", sans-serif;
-}
 
+/* Layout */
 #game-table {
   display: grid;
-  transition: filter 0.5s ease;
   grid-template-columns: 15% 1fr 15%;
   grid-template-rows: 20% 1fr 25%;
   grid-template-areas:
-    ".         top       ."
-    "left      center    right"
-    "uno       bottom    deck";
-  height: 100vh;
-  background: radial-gradient(circle, #2d5a27 0%, var(--table-green) 100%);
-  padding: 20px;
-  gap: 10px;
+    ". top ."
+    "left center right"
+    "uno bottom deck";
+  height:100vh;padding:20px;gap:10px;
+  background:radial-gradient(circle,#2d5a27 0%,var(--table-green) 100%);
+  transition:filter .5s;
 }
 
-/* Base side styling */
-.side {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+.side,.center-play-zone,.corner-deck{display:flex;justify-content:center;align-items:center;grid-area: deck;}
+
+.uno-btn-area {grid-area: uno;display: flex;justify-content: center;align-items: center;}
+.top-side{grid-area:top}
+.left-side{grid-area:left}
+.right-side{grid-area:right}
+.player-side{grid-area:bottom;flex-direction:column}
+.center-play-zone{grid-area:center;flex-direction:column;position:relative}
+
+/* Hand */
+.hand-container{
+  display:flex;justify-content:center;align-items:center;
+  gap:5px;width:100%;height:100%;padding:10px;
+  border:2px dashed var(--border);border-radius:15px;
+  opacity:.4;filter:grayscale(80%);
+  transition:.4s transform,.4s opacity,.4s filter;
 }
 
-.top-side {
-  grid-area: top;
+.left-side .hand-container,
+.right-side .hand-container{width:50vh}
+
+.left-side .hand-container{transform:rotate(90deg)}
+.right-side .hand-container{transform:rotate(-90deg)}
+
+/* Active */
+.hand-container.active-turn{
+  opacity:1;filter:none;border:3px solid #fff;
+  background:rgba(255,255,255,.05);
+  box-shadow:0 0 40px rgba(255,255,255,.3);
+  transform:scale(1.05);
 }
-.left-side {
-  grid-area: left;
-}
-.right-side {
-  grid-area: right;
-}
-.player-side {
-  grid-area: bottom;
-  flex-direction: column;
+.left-side .active-turn{transform:rotate(90deg) scale(1.05)}
+.right-side .active-turn{transform:rotate(-90deg) scale(1.05)}
+
+/* Cards */
+.card{
+  width:var(--card-width);height:var(--card-height);
+  display:flex;justify-content:center;align-items:center;
+  border-radius:8px;font:bold 18px sans-serif;
+  box-shadow:2px 2px 5px rgba(0,0,0,.3);
+  transition:.2s transform,.2s box-shadow;
+  position:relative;
 }
 
-/* Hand Containers*/
-.hand-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 5px;
-  border: 2px dashed var(--border-color);
-  border-radius: 15px;
-  width: 100%;
-  height: 100%;
-  padding: 10px;
+.card-red{background:var(--red);color:#fff}
+.card-blue{background:var(--blue);color:#fff}
+.card-green{background:var(--green);color:#fff}
+.card-yellow{background:var(--yellow)}
+.card-wild{
+  background:linear-gradient(135deg,var(--red),var(--yellow),var(--green),var(--blue));
+  color:#fff;text-shadow:1px 1px 2px #000
 }
 
-/* Rotate hands for side players */
-.left-side .hand-container {
-  transform: rotate(90deg);
-  width: 50vh;
-}
-.right-side .hand-container {
-  transform: rotate(-90deg);
-  width: 50vh;
+.card-back{
+  background:#c0392b;
+  border:3px solid #fff;
+  background-image:radial-gradient(circle,var(--red) 20%,transparent 20%);
+  background-size:15px 15px;
 }
 
-/* Center Play Zone */
-.center-play-zone {
-  grid-area: center;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  position: relative;
+/* Card interactions */
+.card.playable{cursor:pointer;box-shadow:0 0 15px rgba(255,255,255,.8)}
+.card.playable:hover{transform:translateY(-10px);box-shadow:0 5px 20px rgba(255,255,255,.9)}
+
+.hand-container .card{margin-left:-60px;z-index:1}
+.hand-container .card:first-child{margin:0}
+.vertical .card{margin-left:-80px}
+
+.hand-container .card:hover{
+  z-index:10;transform:translateY(-20px) scale(1.1);margin-right:10px
 }
 
-.pile {
-  width: var(--card-width);
-  height: var(--card-height);
-  border: 2px solid var(--border-color);
-  border-radius: 8px;
-  background: rgba(0, 0, 0, 0.1);
-  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
+.player-side .card:hover{
+  z-index:100!important;
+  transform:translateY(-40px) rotate(-2deg) scale(1.2);
+  margin-right:20px
 }
 
-/* Game Buttons & UI */
-#game-notifications {
-  position: absolute;
-  top: 20px;
-  background: rgba(0, 0, 0, 0.6);
-  color: white;
-  padding: 8px 20px;
-  border-radius: 20px;
-  font-weight: bold;
+/* Pile */
+.pile{
+  width:var(--card-width);height:var(--card-height);
+  border:2px solid var(--border);
+  border-radius:8px;
+  background:rgba(0,0,0,.1);
+  box-shadow:inset 0 0 10px rgba(0,0,0,.5);
 }
 
-.uno-btn-area {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+/* UI */
+#game-notifications{
+  position:absolute;top:20px;
+  padding:8px 20px;border-radius:20px;
+  background:rgba(0,0,0,.6);color:#fff;font-weight:bold
 }
 
-#uno-button {
-  padding: 15px 25px;
-  border-radius: 50%;
-  border: 4px solid #fff;
-  background: #e11b05;
-  color: white;
-  font-weight: bold;
-  cursor: pointer;
-  box-shadow: 0 4px 0 #c0392b;
-  transition: transform 0.1s;
+#uno-button{
+  padding:15px 25px;border-radius:50%;
+  border:4px solid #fff;background:#e11b05;color:#fff;
+  font-weight:bold;cursor:pointer;
+  box-shadow:0 4px 0 #c0392b;
+}
+#uno-button:active{transform:translateY(3px);box-shadow:none}
+
+.deck-stack{display:flex;flex-direction:column;align-items:center;gap:8px;cursor:pointer}
+.deck-label{
+  font-size:13px;font-weight:bold;color:#fff;
+  padding:4px 10px;border-radius:12px;
+  background:rgba(0,0,0,.5);
+  border:1px solid rgba(255,255,255,.3);
 }
 
-#uno-button:active {
-  transform: translateY(3px);
-  box-shadow: none;
+/* Color picker */
+#color-picker{
+  position:fixed;inset:0;
+  display:none;flex-direction:column;
+  justify-content:center;align-items:center;
+  gap:20px;background:rgba(0,0,0,.7);z-index:100
+}
+#color-picker p{color:#fff;font-size:22px;font-weight:bold}
+#color-choices{display:flex;gap:20px}
+
+.color-btn{
+  width:70px;height:70px;border-radius:50%;
+  border:4px solid #fff;cursor:pointer;
+  box-shadow:0 4px 10px rgba(0,0,0,.4);
+  transition:.15s;
+}
+.color-btn:hover{transform:scale(1.15);box-shadow:0 6px 16px rgba(0,0,0,.5)}
+[data-color="red"]{background:var(--red)}
+[data-color="yellow"]{background:var(--yellow)}
+[data-color="green"]{background:var(--green)}
+[data-color="blue"]{background:var(--blue)}
+
+/* Animations */
+@keyframes card-pulse{
+  0%,100%{box-shadow:0 0 10px rgba(255,255,255,.4)}
+  50%{box-shadow:0 0 25px rgba(255,255,255,.8)}
 }
 
-.corner-deck {
-  grid-area: deck;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+.player-side.active-turn .playable{
+  animation:card-pulse 2s infinite;
+  transform:translateY(-20px);
+  box-shadow:0 10px 20px rgba(0,0,0,.4)
 }
 
-.deck-stack {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-  cursor: pointer;
+/* Center ring */
+.center-play-zone::before{
+  content:"";position:absolute;
+  width:400px;height:400px;border-radius:50%;
+  border:4px dashed rgba(255,255,255,.1);
 }
 
-.deck-label {
-  color: white;
-  font-size: 13px;
-  font-weight: bold;
-  letter-spacing: 1px;
-  background: rgba(0, 0, 0, 0.5);
-  padding: 4px 10px;
-  border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  user-select: none;
+.direction-clockwise .center-play-zone::before{
+  animation:rotateR 10s linear infinite;
+  border-top-color:rgba(255,255,255,.4)
+}
+.direction-counter .center-play-zone::before{
+  animation:rotateL 10s linear infinite;
+  border-top-color:rgba(255,255,255,.4)
 }
 
-.card-placeholder {
-  width: var(--card-width);
-  height: var(--card-height);
-  background: #fff;
-  border-radius: 6px;
-  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+@keyframes rotateR{to{transform:rotate(360deg)}}
+@keyframes rotateL{from{transform:rotate(360deg)}}
+
+/* Misc */
+body.direction-reversed #game-table{
+  background:radial-gradient(circle,#1a3a47,#0d2412)
 }
 
-/* Card Styles */
-.card {
-  width: var(--card-width);
-  height: var(--card-height);
-  border-radius: 8px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-weight: bold;
-  font-size: 18px;
-  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
-  transition:
-    transform 0.2s,
-    box-shadow 0.2s;
-  position: relative;
+.hand-container.thinking{
+  animation:AI-glow 1.5s infinite alternate
 }
-
-.card-back {
-  background: linear-gradient(
-    135deg,
-    #e74c3c 25%,
-    #c0392b 25%,
-    #c0392b 50%,
-    #e74c3c 50%,
-    #e74c3c 75%,
-    #c0392b 75%
-  );
-  background-size: 20px 20px;
-}
-
-.card-red {
-  background: #e74c3c;
-  color: white;
-}
-.card-blue {
-  background: #3498db;
-  color: white;
-}
-.card-green {
-  background: #2ecc71;
-  color: white;
-}
-.card-yellow {
-  background: #f1c40f;
-  color: black;
-}
-.card-wild {
-  background: linear-gradient(
-    135deg,
-    #e74c3c 0%,
-    #f1c40f 33%,
-    #2ecc71 66%,
-    #3498db 100%
-  );
-  color: white;
-  text-shadow: 1px 1px 2px black;
-}
-
-.card.playable {
-  cursor: pointer;
-  box-shadow: 0 0 15px rgba(255, 255, 255, 0.8);
-}
-
-.card.playable:hover {
-  transform: translateY(-10px);
-  box-shadow: 0 5px 20px rgba(255, 255, 255, 0.9);
-}
-
-/* Color Picker Modal */
-#color-picker {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.7);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: 20px;
-  z-index: 100;
-}
-
-#color-picker p {
-  color: white;
-  font-size: 22px;
-  font-weight: bold;
-}
-
-#color-choices {
-  display: flex;
-  gap: 20px;
-}
-
-.color-btn {
-  width: 70px;
-  height: 70px;
-  border-radius: 50%;
-  border: 4px solid white;
-  cursor: pointer;
-  transition:
-    transform 0.15s,
-    box-shadow 0.15s;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
-}
-
-.color-btn:hover {
-  transform: scale(1.15);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.5);
-}
-
-.color-btn[data-color="red"] {
-  background: #e74c3c;
-}
-.color-btn[data-color="yellow"] {
-  background: #f1c40f;
-}
-.color-btn[data-color="green"] {
-  background: #2ecc71;
-}
-.color-btn[data-color="blue"] {
-  background: #3498db;
-}
-
-/* Consistent Overlap */
-.hand-container .card {
-  margin-left: -60px;
-  transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  z-index: 1;
-}
-
-.hand-container .card:first-child {
-  margin-left: 0;
-}
-
-/* Fan effect on hover: Only for the player */
-.player-side .card:hover {
-  z-index: 100 !important;
-  transform: translateY(-40px) rotate(-2deg) scale(1.2);
-  margin-right: 20px;
-}
-
-.vertical .card {
-  margin-left: -80px;
-}
-
-/* CARDS */
-#color-picker {
-  display: none; /* JavaScript will toggle this to 'flex' */
-}
-
-.card svg {
-  width: 100%;
-  height: 100%;
-  border-radius: 8px;
-  display: block;
-}
-
-.hand-container .card:hover {
-  z-index: 10; /* Bring to front */
-  transform: translateY(-20px) scale(1.1);
-  margin-right: 10px; /* Push neighbors slightly away */
-}
-
-.card-back {
-  background: #c0392b;
-  border: 3px solid white;
-  background-image: radial-gradient(circle, #e74c3c 20%, transparent 20%);
-  background-size: 15px 15px;
-}
-
-/* Define the inactive state (Default) */
-.hand-container {
-  transition: all 0.4s ease;
-  opacity: 0.4;
-  filter: grayscale(80%);
-  border: 2px dashed var(--border-color);
-}
-
-/* Playable card glow */
-.player-side.active-turn .card.playable {
-  animation: card-pulse 2s infinite;
-  cursor: pointer;
-}
-
-@keyframes card-pulse {
-  0% { box-shadow: 0 0 10px rgba(255, 255, 255, 0.4); }
-  50% { box-shadow: 0 0 25px rgba(255, 255, 255, 0.8); }
-  100% { box-shadow: 0 0 10px rgba(255, 255, 255, 0.4); }
-}
-
-/* The Active State */
-.hand-container.active-turn {
-  opacity: 1;
-  filter: grayscale(0%);
-  border: 3px solid #fff;
-  box-shadow: 0 0 40px rgba(255, 255, 255, 0.3);
-  background: rgba(255, 255, 255, 0.05);
-  transform: scale(1.05);
-}
-.left-side .hand-container.active-turn {
-  transform: rotate(90deg) scale(1.05);
-}
-
-.right-side .hand-container.active-turn {
-  transform: rotate(-90deg) scale(1.05);
-}
-
-.player-side.active-turn .card.playable {
-  transform: translateY(-20px);
-  box-shadow: 0 10px 20px rgba(0,0,0,0.4);
-}
-
-.center-play-zone::before {
-  content: '';
-  position: absolute;
-  width: 400px;
-  height: 400px;
-  border: 4px dashed rgba(255, 255, 255, 0.1);
-  border-radius: 50%;
-  z-index: -1;
-  transition: border-color 0.5s ease;
-}
-
-/* Play with classes controlled by JS */
-.direction-clockwise .center-play-zone::before {
-  animation: rotate-right 10s linear infinite;
-  border-top-color: rgba(255, 255, 255, 0.4);
-}
-
-.direction-counter .center-play-zone::before {
-  animation: rotate-left 10s linear infinite;
-  border-top-color: rgba(255, 255, 255, 0.4);
-}
-
-@keyframes rotate-right { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-@keyframes rotate-left { from { transform: rotate(360deg); } to { transform: rotate(0deg); } }
-
-/* Visual cue for Reverse*/
-body.direction-reversed #game-table {
-  background: radial-gradient(circle, #1a3a47 0%, #0d2412 100%);
-}
-
-
-/* Indicator for whose turn is coming next */
-.hand-container.active-turn::after {
-  position: absolute;
-  top: -30px;
-  left: 50%;
-  transform: translateX(-50%);
-  color: white;
-  font-size: 24px;
-  animation: bounce 1s infinite;
-}
-
-@keyframes bounce {
-  0%, 100% { transform: translate(-50%, 0); }
-  50% { transform: translate(-50%, -10px); }
-}
-
-.hand-container.thinking {
-  animation: AI-glow 1.5s infinite alternate;
-}
-
-@keyframes AI-glow {
-  from { box-shadow: 0 0 5px rgba(255, 255, 255, 0.1); }
-  to { box-shadow: 0 0 20px rgba(255, 255, 255, 0.5); }
+@keyframes AI-glow{
+  from{box-shadow:0 0 5px rgba(255,255,255,.1)}
+  to{box-shadow:0 0 20px rgba(255,255,255,.5)}
 }
