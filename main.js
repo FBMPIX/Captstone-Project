@@ -201,20 +201,60 @@ function createCardElement(card, isClickable = false, cardIndex = null) {
   if (!isNaN(card.value)) {
     // STANDARD NUMBER CARDS
     svgContent = `
-      <svg viewBox="0 0 256 384" xmlns="http://www.w3.org/2000/svg"><rect x="10" y="10" width="236" height="364" rx="12" fill="${cardcolor}" stroke="currentColor" stroke-width="4"/><rect x="4" y="4" width="248" height="376" rx="16" fill="none" stroke="#000" stroke-width="2"/><path d="M100 10h146v170ZM10 200v174h146Z" fill="currentColor" opacity=".3"/><rect x="68" y="132" width="120" height="120" rx="10" fill="#fff" stroke="${cardcolor}" stroke-width="3" transform="rotate(45 128 192)"/><text x="128" y="230" font-family="Verdana" font-weight="900" font-size="100" fill="#333" text-anchor="middle">${card.value}</text><rect x="80" y="340" width="96" height="6" rx="3" fill="currentColor"/></svg>`;
+        <svg viewBox="0 0 256 384" xmlns="http://www.w3.org/2000/svg">
+            <rect x="10" y="10" width="236" height="364" rx="12" fill="${cardColor}" stroke="currentColor" stroke-width="4" />
+            <rect x="4" y="4" width="248" height="376" rx="16" fill="none" stroke="black" stroke-width="2" />
+            <path d="M 100 10 L 246 10 L 246 180 Z" fill="currentColor" opacity=".3" />
+            <path d="M 10 200 L 10 374 L 156 374 Z" fill="currentColor" opacity=".3" />
+            <rect x="68" y="132" width="120" height="120" rx="10" fill="white" stroke="${cardColor}" stroke-width="3" transform="rotate(45, 128, 192)" />
+            <text x="128" y="230" font-family="Verdana" font-weight="900" font-size="100" fill="#333" text-anchor="middle">${card.value}</text>
+            <rect x="80" y="340" width="96" height="6" rx="3" fill="currentColor" />
+        </svg>`;
   } else {
     switch (card.value) {
       case "draw2":
         svgContent = `
-          <svg viewBox="0 0 256 384" xmlns="http://www.w3.org/2000/svg"><rect x="10" y="10" width="236" height="364" rx="12" fill="${cardcolor}" stroke="currentColor" stroke-width="4"/><rect x="4" y="4" width="248" height="376" rx="16" fill="none" stroke="#000" stroke-width="2"/><path d="M100 10h146v170ZM10 200v174h146Z" fill="currentColor" opacity=".3"/><text x="20" y="45" font-family="Verdana" font-weight="900" font-size="22" fill="currentColor"> +2 </text><rect x="68" y="132" width="120" height="120" rx="10" fill="currentColor" stroke="#000" stroke-width="2" transform="rotate(45 128 192)"/><text x="120" y="215" font-family="Verdana" font-weight="900" font-size="75" fill="#fff" text-anchor="middle"> +2 </text><rect x="80" y="340" width="96" height="6" rx="3" fill="currentColor"/></svg>`;
+                  <svg viewBox="0 0 256 384" xmlns="http://www.w3.org/2000/svg">
+                      <rect x="10" y="10" width="236" height="364" rx="12" fill="${cardColor}" stroke="currentColor" stroke-width="4" />
+                      <rect x="4" y="4" width="248" height="376" rx="16" fill="none" stroke="black" stroke-width="2" />
+                      <path d="M 100 10 L 246 10 L 246 180 Z" fill="currentColor" opacity=".3" />
+                      <path d="M 10 200 L 10 374 L 156 374 Z" fill="currentColor" opacity=".3" />
+                      <text x="20" y="45" font-family="Verdana" font-weight="900" font-size="22" fill="currentColor"> +2 </text>
+                      <rect x="68" y="132" width="120" height="120" rx="10" fill="currentColor" stroke="black" stroke-width="2" transform="rotate(45, 128, 192)" />
+                      <text x="120" y="215" font-family="Verdana" font-weight="900" font-size="75" fill="white" text-anchor="middle"> +2 </text>
+                      <rect x="80" y="340" width="96" height="6" rx="3" fill="currentColor" />
+                  </svg>`;
         break;
       case "reverse":
         svgContent = `
-          <svg viewBox="0 0 256 384" xmlns="http://www.w3.org/2000/svg"><rect x="10" y="10" width="236" height="364" rx="12" fill="${cardcolor}" stroke="#fff" stroke-width="4"/><rect x="4" y="4" width="248" height="376" rx="16" fill="none" stroke="#000" stroke-width="2"/><path d="M100 10h146v170ZM10 200v174h146Z" fill="#fff" opacity=".2"/><rect x="68" y="132" width="120" height="120" rx="10" fill="currentColor" stroke="#000" stroke-width="2" transform="rotate(45 128 192)"/><g fill="#fff"><path d="M101.6 174c0-14.4 42-14.4 42 6h12L140 204l-15.6-24h10.8c0-12-21.6-12-21.6-6Z"/><path d="M154.4 210c0 14.4-42 14.4-42-6h-12l15.6-24 15.6 24h-10.8c0 9.6 21.6 9.6 21.6 6Z"/></g><rect x="80" y="340" width="96" height="6" rx="3" fill="#fff" opacity=".5"/></svg>`;
+                      <svg viewBox="0 0 256 384" xmlns="http://www.w3.org/2000/svg">
+                          <rect x="10" y="10" width="236" height="364" rx="12" fill="${cardColor}" stroke="white" stroke-width="4" />
+                          <rect x="4" y="4" width="248" height="376" rx="16" fill="none" stroke="black" stroke-width="2" />
+                          <path d="M 100 10 L 246 10 L 246 180 Z" fill="white" opacity=".2" />
+                          <path d="M 10 200 L 10 374 L 156 374 Z" fill="white" opacity=".2" />
+                          <rect x="68" y="132" width="120" height="120" rx="10" fill="currentColor" stroke="black" stroke-width="2" transform="rotate(45, 128, 192)" />
+                          <g fill="white" transform="translate(128, 192) scale(1.2) translate(-32, -32)">
+                              <path d="M 10 17 C 10 5, 45 5, 45 22 L 55 22 L 42 42 L 29 22 L 38 22 C 38 12, 20 12, 20 17 Z" />
+                              <path d="M 54 47 C 54 59, 19 59, 19 42 L 9 42 L 22 22 L 35 42 L 26 42 C 26 50, 44 50, 44 47 Z" />
+                          </g>
+                          <rect x="80" y="340" width="96" height="6" rx="3" fill="white" opacity="0.5" />
+                      </svg>`;
         break;
       case "skip":
         svgContent = `
-          <svg viewBox="0 0 256 384" xmlns="http://www.w3.org/2000/svg"><rect x="10" y="10" width="236" height="364" rx="12" fill="${cardcolor}" stroke="currentColor" stroke-width="4"/><rect x="4" y="4" width="248" height="376" rx="16" fill="none" stroke="#000" stroke-width="2"/><path d="M100 10h146v170ZM10 200v174h146Z" fill="currentColor" opacity=".3"/><circle cx="32" cy="36" r="10" fill="none" stroke="currentColor" stroke-width="3"/><path stroke="currentColor" stroke-width="3" d="m26 42 12-12"/><rect x="68" y="132" width="120" height="120" rx="10" fill="currentColor" stroke="#000" stroke-width="2" transform="rotate(45 128 192)"/><path d="M128 152a40 40 0 1 0 0 80 40 40 0 1 0 0-80m0 10a30 30 0 0 1 22.2 9.8l-44.4 44.4A30 30 0 0 1 128 162m0 60a30 30 0 0 1-22.2-9.8l44.4-44.4A30 30 0 0 1 128 222" fill="#fff"/><rect x="80" y="340" width="96" height="6" rx="3" fill="currentColor"/></svg>`;
+                  <svg viewBox="0 0 256 384" xmlns="http://www.w3.org/2000/svg">
+                      <rect x="10" y="10" width="236" height="364" rx="12" fill="${cardColor}" stroke="currentColor" stroke-width="4" />
+                      <rect x="4" y="4" width="248" height="376" rx="16" fill="none" stroke="black" stroke-width="2" />
+                      <path d="M 100 10 L 246 10 L 246 180 Z" fill="currentColor" opacity=".3" />
+                      <path d="M 10 200 L 10 374 L 156 374 Z" fill="currentColor" opacity=".3" />
+                      <circle cx="32" cy="36" r="10" fill="none" stroke="currentColor" stroke-width="3" />
+                      <line x1="26" y1="42" x2="38" y2="30" stroke="currentColor" stroke-width="3" />
+                      <rect x="68" y="132" width="120" height="120" rx="10" fill="currentColor" stroke="black" stroke-width="2" transform="rotate(45, 128, 192)" />
+                      <g fill="white">
+                          <path d="M 128 152 A 40 40 0 1 0 128 232 A 40 40 0 1 0 128 152 Z M 128 162 A 30 30 0 0 1 150.2 171.8 L 105.8 216.2 A 30 30 0 0 1 128 162 Z M 128 222 A 30 30 0 0 1 105.8 212.2 L 150.2 167.8 A 30 30 0 0 1 128 222 Z" />
+                      </g>
+                      <rect x="80" y="340" width="96" height="6" rx="3" fill="currentColor" />
+                  </svg>`;
         break;
       case "wild-draw4":
         const maskId = `mask-${Math.random().toString(36).substring(2, 9)}`;
