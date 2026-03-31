@@ -19,6 +19,13 @@ const VALUES = [
   "draw2",
 ];
 
+const playerOrder = [
+  "player",
+  "opponentLeft",
+  "opponentTop",
+  "opponentRight",
+];
+
 // Game state
 let deck = [];
 let discardPile = [];
@@ -31,10 +38,7 @@ let players = {
 let currentPlayer = "player";
 let gameDirection = 1; // 1 = clockwise, -1 = counterclockwise
 
-// Initialize the game when page loads
-window.addEventListener("DOMContentLoaded", () => {
-  initGame();
-});
+
 
 function initGame() {
   createDeck();
@@ -214,15 +218,15 @@ function createCardElement(card, isClickable = false, cardIndex = null) {
     switch (card.value) {
       case "draw2":
         svgContent = `
-                  <svg viewBox="0 0 256 384" xmlns="http://www.w3.org/2000/svg">
-                      <rect x="10" y="10" width="236" height="364" rx="12" fill="${cardColor}" stroke="currentColor" stroke-width="4" />
-                      <rect x="4" y="4" width="248" height="376" rx="16" fill="none" stroke="black" stroke-width="2" />
-                      <path d="M 100 10 L 246 10 L 246 180 Z" fill="currentColor" opacity=".3" />
-                      <path d="M 10 200 L 10 374 L 156 374 Z" fill="currentColor" opacity=".3" />
-                      <text x="20" y="45" font-family="Verdana" font-weight="900" font-size="22" fill="currentColor"> +2 </text>
-                      <rect x="68" y="132" width="120" height="120" rx="10" fill="currentColor" stroke="black" stroke-width="2" transform="rotate(45, 128, 192)" />
+<svg viewBox="0 0 256 384" xmlns="http://www.w3.org/2000/svg">
+                      <rect x="10" y="10" width="236" height="364" rx="12" fill="${cardColor}" stroke="currentColor" stroke-width="4"></rect>
+                      <rect x="4" y="4" width="248" height="376" rx="16" fill="none" stroke="black" stroke-width="2"></rect>
+                      <path d="M 100 10 L 246 10 L 246 180 Z" fill="currentColor" opacity=".3"></path>
+                      <path d="M 10 200 L 10 374 L 156 374 Z" fill="currentColor" opacity=".3"></path>
+                      <text x="20" y="45" font-family="Verdana" font-weight="900" font-size="22" fill="white"> +2 </text>
+                      <rect x="68" y="132" width="120" height="120" rx="10" fill="black" stroke="#333" stroke-width="2" transform="rotate(45, 128, 192)"></rect>
                       <text x="120" y="215" font-family="Verdana" font-weight="900" font-size="75" fill="white" text-anchor="middle"> +2 </text>
-                      <rect x="80" y="340" width="96" height="6" rx="3" fill="currentColor" />
+                      <rect x="80" y="340" width="96" height="6" rx="3" fill="currentColor"></rect>
                   </svg>`;
         break;
       case "reverse":
@@ -249,7 +253,7 @@ function createCardElement(card, isClickable = false, cardIndex = null) {
                       <path d="M 10 200 L 10 374 L 156 374 Z" fill="currentColor" opacity=".3" />
                       <circle cx="32" cy="36" r="10" fill="none" stroke="currentColor" stroke-width="3" />
                       <line x1="26" y1="42" x2="38" y2="30" stroke="currentColor" stroke-width="3" />
-                      <rect x="68" y="132" width="120" height="120" rx="10" fill="currentColor" stroke="black" stroke-width="2" transform="rotate(45, 128, 192)" />
+                      <rect x="68" y="132" width="120" height="120" rx="10" fill="black" stroke="black" stroke-width="2" transform="rotate(45, 128, 192)" />
                       <g fill="white">
                           <path d="M 128 152 A 40 40 0 1 0 128 232 A 40 40 0 1 0 128 152 Z M 128 162 A 30 30 0 0 1 150.2 171.8 L 105.8 216.2 A 30 30 0 0 1 128 162 Z M 128 222 A 30 30 0 0 1 105.8 212.2 L 150.2 167.8 A 30 30 0 0 1 128 222 Z" />
                       </g>
@@ -279,31 +283,6 @@ function createCardElement(card, isClickable = false, cardIndex = null) {
   return cardDiv;
 }
 
-function getHexColor(colorName) {
-  const map = {
-    red: "#991240",
-    yellow: "#E1AD01",
-    green: "#008080",
-    blue: "#2E5BFF",
-    wild: "#333",
-  };
-  return map[colorName] || "#333";
-}
-
-function updateTurnVisuals(activeId) {
-  // Remove the active class from everyone
-  document.querySelectorAll(".hand-container").forEach((container) => {
-    container.classList.remove("active-turn");
-    container.parentElement.classList.remove("active-turn"); // For the side/player containers
-  });
-
-  // Add it to the current player's container
-  const activeContainer = document.getElementById(activeId);
-  if (activeContainer) {
-    activeContainer.classList.add("active-turn");
-    activeContainer.parentElement.classList.add("active-turn");
-  }
-}
 
 // Check if a card can be played
 function isCardPlayable(card) {
@@ -355,12 +334,7 @@ function playCard(cardIndex) {
 
 // Get the name of the next player without advancing currentPlayer
 function getNextPlayerName() {
-  const playerOrder = [
-    "player",
-    "opponentLeft",
-    "opponentTop",
-    "opponentRight",
-  ];
+
   const currentIndex = playerOrder.indexOf(currentPlayer);
   return playerOrder[(currentIndex + gameDirection + 4) % 4];
 }
@@ -409,12 +383,7 @@ function applyCardEffect(card) {
 }
 // Move to next player, skipping `steps` positions
 function nextTurn(steps = 1) {
-  const playerOrder = [
-    "player",
-    "opponentLeft",
-    "opponentTop",
-    "opponentRight",
-  ];
+
   const idMap = {
     player: "player-hand",
     opponentLeft: "opponent-left",
@@ -466,7 +435,6 @@ function nextTurn(steps = 1) {
 // Simple AI for opponents
 function opponentPlay() {
   const hand = players[currentPlayer];
-  const topCard = discardPile[discardPile.length - 1];
 
   // Find playable cards
   const playableCards = hand.filter((card) => isCardPlayable(card));
@@ -509,9 +477,10 @@ function updateNotification(message = null) {
 }
 
 // Draw card button functionality
-document.addEventListener("DOMContentLoaded", () => {
-  const drawDeck = document.getElementById("main-draw-deck");
+window.addEventListener("DOMContentLoaded", () => {
+  initGame();
 
+  const drawDeck = document.getElementById("main-draw-deck");
   drawDeck.addEventListener("click", () => {
     if (currentPlayer === "player" && deck.length > 0) {
       const drawnCard = deck.pop();
