@@ -231,18 +231,22 @@ function createCardElement(card, isClickable = false, cardIndex = null) {
         break;
       case "reverse":
         svgContent = `
-                      <svg viewBox="0 0 256 384" xmlns="http://www.w3.org/2000/svg">
-                          <rect x="10" y="10" width="236" height="364" rx="12" fill="${cardColor}" stroke="white" stroke-width="4" />
-                          <rect x="4" y="4" width="248" height="376" rx="16" fill="none" stroke="black" stroke-width="2" />
-                          <path d="M 100 10 L 246 10 L 246 180 Z" fill="white" opacity=".2" />
-                          <path d="M 10 200 L 10 374 L 156 374 Z" fill="white" opacity=".2" />
-                          <rect x="68" y="132" width="120" height="120" rx="10" fill="currentColor" stroke="black" stroke-width="2" transform="rotate(45, 128, 192)" />
-                          <g fill="white" transform="translate(128, 192) scale(1.2) translate(-32, -32)">
-                              <path d="M 10 17 C 10 5, 45 5, 45 22 L 55 22 L 42 42 L 29 22 L 38 22 C 38 12, 20 12, 20 17 Z" />
-                              <path d="M 54 47 C 54 59, 19 59, 19 42 L 9 42 L 22 22 L 35 42 L 26 42 C 26 50, 44 50, 44 47 Z" />
-                          </g>
-                          <rect x="80" y="340" width="96" height="6" rx="3" fill="white" opacity="0.5" />
-                      </svg>`;
+                <svg viewBox="0 0 256 384" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="10" y="10" width="236" height="364" rx="12" fill="${cardColor}" stroke="currentColor" stroke-width="4" />
+                    <rect x="4" y="4" width="248" height="376" rx="16" fill="none" stroke="black" stroke-width="2" />
+                    <path d="M 100 10 L 246 10 L 246 180 Z" fill="currentColor" opacity=".3" />
+                    <path d="M 10 200 L 10 374 L 156 374 Z" fill="currentColor" opacity=".3" />
+                    <g transform="translate(18, 22) scale(0.6)" fill="currentColor">
+                        <path d="M 10 17 C 10 5, 45 5, 45 22 L 55 22 L 42 42 L 29 22 L 38 22 C 38 12, 20 12, 20 17 Z" />
+                        <path d="M 50 44 C 50 56, 15 56, 15 39 L 5 39 L 18 19 L 31 39 L 22 39 C 22 47, 40 47, 40 44 Z" />
+                    </g>
+                    <rect x="68" y="132" width="120" height="120" rx="10" fill="black" stroke="black" stroke-width="2" transform="rotate(45, 128, 192)" />
+                    <g fill="white">
+                        <path d="M 100 170 C 100 150, 155 150, 155 175 L 165 175 L 152 195 L 139 175 L 148 175 C 148 162, 110 162, 110 170 Z" />
+                        <path d="M 156 214 C 156 234, 101 234, 101 209 L 91 209 L 104 189 L 117 209 L 108 209 C 108 222, 146 222, 146 214 Z" />
+                    </g>
+                    <rect x="80" y="340" width="96" height="6" rx="3" fill="currentColor" />
+                </svg>`;
         break;
       case "skip":
         svgContent = `
