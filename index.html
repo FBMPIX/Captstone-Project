@@ -28,7 +28,6 @@
 
       <div class="side player-side">
         <div id="player-hand" class="hand-container"></div>
-        <button id="uno-button">UNO</button>
       </div>
 
       <div id="color-picker" style="display: none">
@@ -47,6 +46,15 @@
           <span class="deck-label">DRAW CARD</span>
         </div>
       </div>
+      
+      <div id="win-screen" style="display: none">
+        <div class="win-content">
+          <h1 id="winner-name">PLAYER WINS!</h1>
+          <p>The game has ended.</p>
+          <button onclick="location.reload()">PLAY AGAIN</button>
+        </div>
+      </div>
+      
     </div>
     <script src="main.js" type="module"></script>
   </body>
