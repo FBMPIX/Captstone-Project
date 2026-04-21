@@ -7,7 +7,6 @@
 *{margin:0;padding:0;box-sizing:border-box}
 body{overflow:hidden;font-family:"Segoe UI",sans-serif}
 
-
 /* Layout */
 #game-table {
   display: grid;
@@ -188,12 +187,9 @@ body.direction-reversed #game-table{
   to{box-shadow:0 0 20px rgba(255,255,255,.5)}
 }
 
+/* Win Screen */
 #win-screen {position: fixed; inset: 0;background: rgba(0, 0, 0, 0.9);display: flex;justify-content: center;align-items: center;z-index: 1000;text-align: center;backdrop-filter: blur(10px);}
-
 .win-content h1 {color: var(--yellow);font-size: 5rem;text-shadow: 0 0 20px var(--red);margin-bottom: 20px;font-family: 'Impact', sans-serif;}
-
 .win-content p {color: #fff;font-size: 1.5rem;margin-bottom: 30px;}
-
 .win-content button {padding: 15px 40px;font-size: 1.2rem;font-weight: bold;background: var(--green);color: white;border: none;border-radius: 50px;cursor: pointer;transition: transform 0.2s;}
-
 .win-content button:hover {transform: scale(1.1);background: #27ae60;}
