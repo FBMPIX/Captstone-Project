@@ -11,7 +11,10 @@ export const Rules = {
     }
 
     // Match color or value
-    return selectedCard.color === topCard.color || selectedCard.value === topCard.value;
+    return (
+      selectedCard.color === topCard.color ||
+      selectedCard.value === topCard.value
+    );
   },
 
   // ==========================
@@ -20,13 +23,28 @@ export const Rules = {
   getCardEffect(card) {
     switch (card.value) {
       case "skip":
-        return { type: "skip", message: "Next player skipped!", };
+        return { type: "skip", message: "Next player skipped!" };
       case "reverse":
-        return { type: "reverse", message: "Game direction reversed!", };
+        return { type: "reverse", message: "Game direction reversed!" };
       case "draw2":
-        return { type: "draw",amount: 2,skipNext: true,message: "Next player draws 2 cards!", };
+        return {
+          type: "draw",
+          amount: 2,
+          skipNext: true,
+          message: "Next player draws 2 cards!",
+        };
       case "wild-draw4":
-        return { type: "draw", amount: 4,skipNext: true,message: "Next player draws 4 cards!", };
+        return {
+          type: "draw",
+          amount: 4,
+          skipNext: true,
+          message: "Next player draws 4 cards!",
+        };
+      case "combine":
+        return {
+          type: "choice",
+          message: "Pick 2 special cards from your hand!",
+        };
       default:
         return null;
     }
@@ -44,7 +62,7 @@ export const Rules = {
 
     // Returns the color the player has the most of
     return Object.keys(counts).reduce((a, b) =>
-      counts[a] >= counts[b] ? a : b
+      counts[a] >= counts[b] ? a : b,
     );
   },
 

@@ -46,11 +46,12 @@ body{overflow:hidden;font-family:"Segoe UI",sans-serif}
 .right-side .hand-container{transform:rotate(-90deg)}
 
 /* Active */
-.hand-container.active-turn{
-  opacity:1;filter:none;border:3px solid #fff;
-  background:rgba(255,255,255,.05);
-  box-shadow:0 0 40px rgba(255,255,255,.3);
-  transform:scale(1.05);
+.hand-container.active-turn {
+  opacity: 1;
+  filter: none;
+  border: 2px dashed rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.02);
+  transform: scale(1.05);
 }
 .left-side .active-turn{transform:rotate(90deg) scale(1.05)}
 .right-side .active-turn{transform:rotate(-90deg) scale(1.05)}
@@ -80,7 +81,7 @@ body{overflow:hidden;font-family:"Segoe UI",sans-serif}
 }
 
 /* Card interactions */
-.card.playable{cursor:pointer;box-shadow:0 0 15px rgba(255,255,255,.8)}
+.card.playable{cursor:pointer;box-shadow: 2px 2px 5px rgba(0,0,0,.3);}
 .card.playable:hover{transform:translateY(-10px);box-shadow:0 5px 20px rgba(255,255,255,.9)}
 
 .hand-container .card{margin-left:-60px;z-index:1}
@@ -150,7 +151,6 @@ body{overflow:hidden;font-family:"Segoe UI",sans-serif}
 }
 
 .player-side.active-turn .playable{
-  animation:card-pulse 2s infinite;
   transform:translateY(-20px);
   box-shadow:0 10px 20px rgba(0,0,0,.4)
 }
@@ -185,6 +185,10 @@ body.direction-reversed #game-table{
 @keyframes AI-glow{
   from{box-shadow:0 0 5px rgba(255,255,255,.1)}
   to{box-shadow:0 0 20px rgba(255,255,255,.5)}
+}
+#discard-pile .card {
+  transform: rotate(var(--rotation, 0deg));
+  transition: transform 0.3s ease-out;
 }
 
 /* Win Screen */

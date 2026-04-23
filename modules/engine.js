@@ -47,7 +47,7 @@ export function dealCards() {
 
 export function isCardPlayable(card) {
   const topCard = gameState.discardPile[gameState.discardPile.length - 1];
-  return Rules.isValidMove(card, topCard); 
+  return Rules.isValidMove(card, topCard);
 }
 
 export function getNextPlayerName() {
@@ -69,19 +69,46 @@ export function forceDrawCards(playerName, count) {
   }
 }
 
-export function nextTurn(steps = 1) {
-  // Stop everything if the game is over
-  if (gameState.isGameOver) return;
+export function executeCustomCombo(selectedCards) {
+  let totalDraw = 0;
+  let shouldSkip = false;
 
+  selectedCards.forEach(card => {
+    if (card.value === "reverse") {
+      gameState.gameDirection *= -1;
+      document.body.classList.toggle("direction-reversed", gameState.gameDirection === -1);
+    }
+    if (card.value === "draw2") {
+      totalDraw += 2;
+      shouldSkip = true;
+    }
+    if (card.value === "skip") {
+      shouldSkip = true;
+    }
+  });
+
+  if (totalDraw > 0) {
+    const victim = getNextPlayerName();
+    forceDrawCards(victim, totalDraw);
+  }
+
+  nextTurn(shouldSkip ? 2 : 1);
+}
+
+
+export function nextTurn(steps = 1) {
+  if (gameState.isGameOver) return;
+  const totalPlayers = PLAYER_ORDER.length;
   let idx = PLAYER_ORDER.indexOf(gameState.currentPlayer);
-  idx = (idx + steps * gameState.gameDirection + 4) % 4;
+
+  idx = (idx + (steps * gameState.gameDirection) + (steps * totalPlayers)) % totalPlayers;
+
   gameState.currentPlayer = PLAYER_ORDER[idx];
 
   UI.updateTurnVisuals();
   UI.updateNotification();
 
   if (gameState.currentPlayer !== "player") {
-    // Clear any existing timeouts to be safe
     setTimeout(opponentPlay, 1200);
   }
 }
@@ -102,6 +129,14 @@ export function applyCardEffect(card) {
       forceDrawCards(nextPlayer, effect.amount);
       UI.updateNotification(effect.message);
       nextTurn(2);
+    } else if (effect.type === "choice") {
+      if (gameState.currentPlayer === "player") {
+        gameState.isSelectingCombo = true;
+        UI.updateNotification(effect.message);
+      } else {
+        UI.updateNotification(`${gameState.currentPlayer} used Combine!`);
+        nextTurn(2); 
+      }
     }
   } else {
     nextTurn(1);
@@ -116,7 +151,8 @@ export function opponentPlay() {
   const playableCards = hand.filter((card) => isCardPlayable(card));
 
   if (playableCards.length > 0) {
-    const cardToPlay = playableCards[Math.floor(Math.random() * playableCards.length)];
+    const cardToPlay =
+      playableCards[Math.floor(Math.random() * playableCards.length)];
     const cardIndex = hand.indexOf(cardToPlay);
 
     hand.splice(cardIndex, 1);
@@ -136,7 +172,6 @@ export function opponentPlay() {
     }
 
     applyCardEffect(cardToPlay);
-
   } else {
     if (deck.length > 0) {
       hand.push(deck.pop());

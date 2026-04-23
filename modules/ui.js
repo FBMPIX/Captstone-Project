@@ -16,7 +16,7 @@ export function renderPlayerHand() {
 export function renderOpponentHands() {
   ["opponentTop", "opponentLeft", "opponentRight"].forEach((opponent) => {
     const container = document.getElementById(
-      opponent.replace("opponent", "opponent-").toLowerCase()
+      opponent.replace("opponent", "opponent-").toLowerCase(),
     );
     if (!container) return;
     container.innerHTML = "";
@@ -57,8 +57,6 @@ function createCardElement(card, isClickable = false, cardIndex = null) {
   const cardColor = colors[card.color] || "#333";
   let svgContent = "";
 
-  // Determine which SVG design to use
-  // TODO: Fix Unique and wild cards
   if (!isNaN(card.value)) {
     // STANDARD NUMBER CARDS
     svgContent = `
@@ -121,6 +119,19 @@ function createCardElement(card, isClickable = false, cardIndex = null) {
                       <rect x="80" y="340" width="96" height="6" rx="3" fill="currentColor" />
                   </svg>`;
         break;
+      case "combine":
+        svgContent = `
+            <svg viewBox="0 0 256 384" xmlns="http://www.w3.org/2000/svg">
+                <rect x="10" y="10" width="236" height="364" rx="12" fill="${cardColor}" stroke="currentColor" stroke-width="4" />
+                <rect x="4" y="4" width="248" height="376" rx="16" fill="none" stroke="black" stroke-width="2" />
+                <path d="M 100 10 L 246 10 L 246 180 Z" fill="currentColor" opacity=".3" />
+                <path d="M 10 200 L 10 374 L 156 374 Z" fill="currentColor" opacity=".3" />
+                <rect x="68" y="132" width="120" height="120" rx="10" fill="black" stroke="white" stroke-width="2" transform="rotate(45, 128, 192)" />
+                <text x="128" y="210" font-family="Verdana" font-weight="900" font-size="40" fill="white" text-anchor="middle">COM</text>
+                <rect x="80" y="340" width="96" height="6" rx="3" fill="currentColor" />
+            </svg>`;
+        break;
+
       case "wild-draw4":
         const maskId = `mask-${Math.random().toString(36).substring(2, 9)}`;
         svgContent = `
@@ -156,7 +167,9 @@ export function updateNotification(message = null) {
     notification.textContent = message;
   } else {
     notification.textContent =
-      gameState.currentPlayer === "player" ? "Your Turn" : `${gameState.currentPlayer}'s Turn`;
+      gameState.currentPlayer === "player"
+        ? "Your Turn"
+        : `${gameState.currentPlayer}'s Turn`;
   }
 }
 
@@ -183,7 +196,10 @@ export function showWinScreen(winner) {
   const winScreen = document.getElementById("win-screen");
   const winnerText = document.getElementById("winner-name");
 
-  const displayName = winner === "player" ? "YOU WIN!" : `${winner.replace(/([A-Z])/g, ' $1').toUpperCase()} WINS!`;
+  const displayName =
+    winner === "player"
+      ? "YOU WIN!"
+      : `${winner.replace(/([A-Z])/g, " $1").toUpperCase()} WINS!`;
 
   winnerText.textContent = displayName;
   winScreen.style.display = "flex";

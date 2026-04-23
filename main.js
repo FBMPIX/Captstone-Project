@@ -22,7 +22,7 @@ function startGame() {
   UI.renderPlayerHand();
   UI.renderOpponentHands();
   UI.renderDiscardPile();
-  UI.updateTurnVisuals(); 
+  UI.updateTurnVisuals();
   setupColorPicker();
 
   Engine.nextTurn(0);
@@ -64,38 +64,89 @@ function pickColor(color) {
 /**
  * Core logic for a player attempting to play a card
  */
- export function playCard(cardIndex) {
-   const state = State.gameState;
+export function playCard(cardIndex) {
+  const state = State.gameState;
+  const card = state.players.player[cardIndex];
 
-   if (state.isGameOver || state.currentPlayer !== "player") return;
+  if (card.value === "combine") {
+    const specialCount = state.players.player.filter((c) =>
+      ["skip", "reverse", "draw2"].includes(c.value),
+    ).length;
 
-   const card = state.players.player[cardIndex];
+    if (specialCount < 2) {
+      UI.updateNotification("Need at least 2 other special cards to Combine!");
+      return;
+    }
+  }
 
-   if (!Engine.isCardPlayable(card)) {
-     UI.updateNotification("Cannot play that card!");
-     return;
-   }
+  if (state.isGameOver || state.currentPlayer !== "player") return;
 
-   state.players.player.splice(cardIndex, 1);
-   state.discardPile.push(card);
+  if (state.isSelectingCombo) {
+    const selectedCard = state.players.player[cardIndex];
 
-   UI.renderPlayerHand();
-   UI.renderDiscardPile();
+    // Only allow selecting Unique cards 
+    const isSpecial = ["skip", "reverse", "draw2"].includes(selectedCard.value);
 
-   if (state.players.player.length === 0) {
-     state.isGameOver = true;
-     UI.updateNotification("You win!");
-     UI.showWinScreen("player");
-     return;
-   }
+    if (!isSpecial) {
+      UI.updateNotification("Pick a Special card (Skip, Reverse, or Draw 2)!");
+      return;
+    }
 
-   if (card.color === "wild" || card.value === "wild-draw4") {
-     UI.showColorPicker();
-     return;
-   }
+    // Prevent selecting the exact same card instance twice
+    if (state.comboSelection.includes(cardIndex)) return;
 
-   Engine.applyCardEffect(card);
- }
+    state.comboSelection.push(cardIndex);
+    UI.updateNotification(
+      `Selected ${state.comboSelection.length}/2 special cards...`,
+    );
+
+    if (state.comboSelection.length === 2) {
+      state.isSelectingCombo = false;
+
+      const cardsToCombine = state.comboSelection.map(
+        (idx) => state.players.player[idx],
+      );
+
+      state.comboSelection
+        .sort((a, b) => b - a)
+        .forEach((idx) => {
+          state.players.player.splice(idx, 1);
+        });
+
+      state.comboSelection = [];
+      UI.renderPlayerHand();
+
+      Engine.executeCustomCombo(cardsToCombine);
+    }
+    return;
+  }
+
+  // --- NORMAL PLAY LOGIC ---
+  if (!Engine.isCardPlayable(card)) {
+    UI.updateNotification("Cannot play that card!");
+    return;
+  }
+
+  state.players.player.splice(cardIndex, 1);
+  state.discardPile.push(card);
+
+  UI.renderPlayerHand();
+  UI.renderDiscardPile();
+
+  if (state.players.player.length === 0) {
+    state.isGameOver = true;
+    UI.updateNotification("You win!");
+    UI.showWinScreen("player");
+    return;
+  }
+
+  if (card.color === "wild" || card.value === "wild-draw4") {
+    UI.showColorPicker();
+    return;
+  }
+
+  Engine.applyCardEffect(card);
+}
 
 // Entry Point
 window.addEventListener("DOMContentLoaded", () => {
@@ -121,10 +172,10 @@ window.addEventListener("DOMContentLoaded", () => {
 
         // Check if the drawn card can be played immediately
         if (Engine.isCardPlayable(drawnCard)) {
-            UI.updateNotification("You drew a playable card!");
+          UI.updateNotification("You drew a playable card!");
         } else {
-            UI.updateNotification("No moves. Passing turn...");
-            setTimeout(() => Engine.nextTurn(1), 1000);
+          UI.updateNotification("No moves. Passing turn...");
+          setTimeout(() => Engine.nextTurn(1), 1000);
         }
       }
     });

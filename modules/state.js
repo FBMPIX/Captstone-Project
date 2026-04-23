@@ -10,4 +10,6 @@ export const gameState = {
   currentPlayer: "player",
   gameDirection: 1, // 1 = clockwise, -1 = counterclockwise
   isGameOver: false,
+  isSelectingCombo: false,
+  comboSelection: [],
 };
