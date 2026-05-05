@@ -62,7 +62,6 @@ function createCardElement(card, isClickable = false, cardIndex = null) {
     svgContent = `
         <svg viewBox="0 0 256 384" xmlns="http://www.w3.org/2000/svg">
             <rect x="10" y="10" width="236" height="364" rx="12" fill="${cardColor}" stroke="currentColor" stroke-width="4" />
-            <rect x="4" y="4" width="248" height="376" rx="16" fill="none" stroke="black" stroke-width="2" />
             <path d="M 100 10 L 246 10 L 246 180 Z" fill="currentColor" opacity=".3" />
             <path d="M 10 200 L 10 374 L 156 374 Z" fill="currentColor" opacity=".3" />
             <rect x="68" y="132" width="120" height="120" rx="10" fill="white" stroke="${cardColor}" stroke-width="3" transform="rotate(45, 128, 192)" />
@@ -122,13 +121,19 @@ function createCardElement(card, isClickable = false, cardIndex = null) {
       case "combine":
         svgContent = `
             <svg viewBox="0 0 256 384" xmlns="http://www.w3.org/2000/svg">
-                <rect x="10" y="10" width="236" height="364" rx="12" fill="${cardColor}" stroke="currentColor" stroke-width="4" />
-                <rect x="4" y="4" width="248" height="376" rx="16" fill="none" stroke="black" stroke-width="2" />
-                <path d="M 100 10 L 246 10 L 246 180 Z" fill="currentColor" opacity=".3" />
-                <path d="M 10 200 L 10 374 L 156 374 Z" fill="currentColor" opacity=".3" />
-                <rect x="68" y="132" width="120" height="120" rx="10" fill="black" stroke="white" stroke-width="2" transform="rotate(45, 128, 192)" />
-                <text x="128" y="210" font-family="Verdana" font-weight="900" font-size="40" fill="white" text-anchor="middle">COM</text>
-                <rect x="80" y="340" width="96" height="6" rx="3" fill="currentColor" />
+              <rect x="10" y="10" width="236" height="364" rx="12" fill="${cardColor}" stroke="currentColor" stroke-width="4"/>
+              <rect x="4" y="4" width="248" height="376" rx="16" fill="none" stroke="black" stroke-width="2"/>
+              <path d="M 100 10 L 246 10 L 246 180 Z" fill="currentColor" opacity=".3"/>
+              <path d="M 10 200 L 10 374 L 156 374 Z" fill="currentColor" opacity=".3"/>
+              <g transform="translate(18,18) scale(0.7)">
+                <rect x="0" y="2" width="14" height="20" rx="2" fill="black" stroke="white" transform="rotate(-10 7 12)"/>
+                <rect x="10" y="6" width="14" height="20" rx="2" fill="black" stroke="white" transform="rotate(10 17 16)"/>
+              </g>
+              <g transform="translate(128 192)">
+                <rect x="-60" y="-45" width="80" height="110" rx="10" fill="black" stroke="white" stroke-width="2" transform="rotate(-12)"/>
+                <rect x="-20" y="-45" width="80" height="110" rx="10" fill="black" stroke="white" stroke-width="2" transform="rotate(12)"/>
+              </g>
+              <rect x="80" y="340" width="96" height="6" rx="3" fill="currentColor"/>
             </svg>`;
         break;
 

@@ -84,7 +84,7 @@ export function playCard(cardIndex) {
   if (state.isSelectingCombo) {
     const selectedCard = state.players.player[cardIndex];
 
-    // Only allow selecting Unique cards 
+    // Only allow selecting Unique cards
     const isSpecial = ["skip", "reverse", "draw2"].includes(selectedCard.value);
 
     if (!isSpecial) {
